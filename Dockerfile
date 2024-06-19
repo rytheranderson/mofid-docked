@@ -1,26 +1,18 @@
-FROM continuumio/miniconda3
+# 3.10 is the highest version that works with the setup.py out of the box
+FROM python:3.10-slim-bullseye
 
-# set up conda and deps, per .travis.yml
-RUN apt-get update -qq
-RUN mkdir -p /usr/share/man/man1/  # required to prevent default-jre installation from crashing
+# Install dependencies
+RUN apt-get -qq update
+# Prevents default-jre installation from crashing
+RUN mkdir -p /usr/share/man/man1/
 RUN apt-get install -qq default-jre
 RUN apt-get install -qq build-essential cmake
 
-RUN conda config --set always_yes yes --set changeps1 no
-RUN conda create -q -n py2 python=2.7
-
-# copy source code from git
+# Copy over the source
 WORKDIR /mofid
 COPY . /mofid
 
-# compile openbabel, C++ analysis code, and Python package
+# Compile openbabel, C++ analysis code, and python scripts
 RUN make init
 RUN python set_paths.py
 RUN pip install .
-# Disabling conda environment for now and keeping with base Python
-#RUN source activate py2
-#RUN pip install .
-#RUN conda deactivate
-
-# then run the code, either interactively or via docker command line
-
