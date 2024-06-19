@@ -1,5 +1,5 @@
 # 3.10 is the highest version that works with the setup.py out of the box
-FROM python:3.10-slim-bullseye
+FROM python:3.12-slim-bullseye
 
 # Install dependencies
 RUN apt-get -qq update
