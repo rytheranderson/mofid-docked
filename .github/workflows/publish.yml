@@ -10,6 +10,9 @@ on:
       branches:
       - 'master'
 
+env:
+  TEST_TAG: ${{ github.repository }}:test
+
 jobs:
   build-and-push:
     name: Push Docker image to multiple registries
@@ -40,10 +43,11 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           load: true
-          tags: ${{ steps.meta.outputs.tags }}:test
+          tags: ${{ env.TEST_TAG }}
 
       - name: Test
-        run: docker run --rm ${{ steps.meta.outputs.tags }}:test make test
+        run: |
+          docker run --rm ${{ env.TEST_TAG }} make test
 
       - name: Build and push
         id: push
