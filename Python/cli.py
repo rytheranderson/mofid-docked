@@ -1,6 +1,8 @@
 import argparse
+import io
 import json
 import sys
+from contextlib import redirect_stderr
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -37,7 +39,11 @@ def main() -> None:
     results = []
     for cif in args.cifs:
         with TemporaryDirectory() as outdir:
-            results.append(cif2mofid(cif, outdir))
+            with redirect_stderr(io.StringIO()) as err_redirect:
+                res = cif2mofid(cif, outdir)
+                # Capture warnings sent to stderr, add to the results dict
+                res["captured_stderr"] = err_redirect.getvalue().splitlines()
+                results.append(res)
 
     resp = results[0] if len(results) == 1 else results
     with args.out as outfile:
