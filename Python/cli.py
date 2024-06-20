@@ -21,6 +21,7 @@ def parse_args() -> argparse.ArgumentParser:
         "--cifs",
         nargs="*",
         type=Path,
+        required=True,
         help="The CIFs to generate MOF IDs and associated data for.",
     )
     parser.add_argument(
