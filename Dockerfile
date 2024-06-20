@@ -15,3 +15,5 @@ COPY . /mofid
 RUN make init
 RUN python set_paths.py
 RUN pip install .
+
+CMD ["bash"]

@@ -4,9 +4,7 @@ import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from run_mofid import cif2mofid
-
-DEFAULT_OUTPUT_PATH = Path("Output")
+from mofid.run_mofid import cif2mofid  # type:ignore[import-untyped]
 
 
 def parse_args() -> argparse.ArgumentParser:
@@ -18,11 +16,10 @@ def parse_args() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-C",
-        "--cif",
+        "--cifs",
         nargs="+",
         type=Path,
-        required=True,
-        help="The CIF to generate a MOF ID and associated data for.",
+        help="The CIFs to generate MOF IDs and associated data for.",
     )
     parser.add_argument(
         "-O",
@@ -38,7 +35,7 @@ def main() -> None:
     args = parse_args().parse_args()
 
     results = []
-    for cif in args.cif:
+    for cif in args.cifs:
         with TemporaryDirectory() as outdir:
             results.append(cif2mofid(cif, outdir))
 
